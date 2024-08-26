@@ -1,0 +1,60 @@
+<.header>
+  Timeline
+  <:actions>
+    <.link patch={~p"/posts/new"}>
+      <.button>New Post</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<div id="posts" class="flex flex-col gap-4">
+  <%= for post <- @posts do %>
+    <div id={"post-#{post.id}"} class="flex flex-col bg-white shadow rounded-lg p-4 w-full">
+      <div class="flex-1">
+        <h2 class="text-xl font-semibold"><%= post.username %></h2>
+        <p class="text-gray-700"><%= post.body %></p>
+        <div class="mt-2 flex items-center gap-4">
+          <!-- Likes Button -->
+          <button 
+            phx-click="like"
+            phx-value-id={post.id}
+            class="flex items-center text-blue-500"
+          >
+            <i class="fas fa-thumbs-up mr-1"></i>
+            <span><%= post.likes_count %></span>
+          </button>
+          <!-- Replies Button -->
+          <button 
+            phx-click="reply"
+            phx-value-id={post.id}
+            class="flex items-center text-green-500"
+          >
+            <i class="fas fa-comments mr-1"></i>
+            <span><%= post.replies_count %></span>
+          </button>
+        </div>
+      </div>
+      <div class="mt-4 flex justify-between">
+        <.link patch={~p"/posts/#{post.id}/edit"} class="text-blue-500">Edit</.link>
+        <.link
+          phx-click={JS.push("delete", value: %{id: post.id}) |> hide("##{post.id}")}
+          data-confirm="Are you sure?"
+          class="text-red-500"
+        >
+          Delete
+        </.link>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<.modal :if={@live_action in [:new, :edit]} id="post-modal" show on_cancel={JS.patch(~p"/posts")}>
+  <.live_component
+    module={TwittercloneWeb.PostLive.FormComponent}
+    id={@post.id || :new}
+    title={@page_title}
+    action={@live_action}
+    post={@post}
+    patch={~p"/posts"}
+  />
+</.modal>
