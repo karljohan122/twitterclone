@@ -1,5 +1,7 @@
 # Twitterclone
 
+This is a project based off of Chris McCords youtube tutorial: https://www.youtube.com/watch?v=MZvmYaFkNJI
+
 To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies

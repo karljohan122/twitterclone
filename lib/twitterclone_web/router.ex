@@ -21,6 +21,10 @@ defmodule TwittercloneWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+  end
+
+  scope "/", TwittercloneWeb do
+    pipe_through [:browser, :require_authenticated_user]
 
     live "/posts", PostLive.Index, :index
     live "/posts/new", PostLive.Index, :new
